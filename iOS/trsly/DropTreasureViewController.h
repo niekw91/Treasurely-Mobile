@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DropTreasureViewController : UIViewController
+@interface DropTreasureViewController : UIViewController <UITextFieldDelegate>
 
 @end

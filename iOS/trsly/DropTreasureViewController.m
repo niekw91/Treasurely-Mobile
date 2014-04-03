@@ -14,9 +14,13 @@
 @property (weak, nonatomic) IBOutlet UIImageView *imageView;
 @property (weak, nonatomic) IBOutlet UITextField *titleTextField;
 @property (weak, nonatomic) IBOutlet UITextField *messageTextField;
+@property (strong, nonatomic) UIView *imageMenuView;
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *dropButton;
 
+@property (strong, nonatomic) NSMutableDictionary *dropReply;
+
+@property (nonatomic, strong) NSMutableData *buffer;
 @property (nonatomic, strong) NSURLConnection *connection;
 @property (nonatomic, strong) NSMutableDictionary *params;
 
@@ -40,23 +44,35 @@
     return self;
 }
 
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    [textField resignFirstResponder];
+    return YES;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+    self.dropReply = [[NSMutableDictionary alloc] init];
+    // Set textfield delegates to collapse  on enter key
+    self.titleTextField.delegate = self;
+    self.messageTextField.delegate = self;
     
     manager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
-    
+    // Initialize the  image menu view
+    [self createImageMenuView];
+    // Set single  tap gesture on imageview
     [self.imageView setUserInteractionEnabled:YES];
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapping:)];
     [singleTap setNumberOfTapsRequired:1];
     [self.imageView addGestureRecognizer:singleTap];
 }
 
-- (void)singleTapping:(UIGestureRecognizer *)recognizer
+- (void)createImageMenuView
 {
-    UIView *subView = [[UIView alloc] initWithFrame:CGRectMake(90, 150, 150, 150)];
+    self.imageMenuView = [[UIView alloc] initWithFrame:CGRectMake(90, 150, 150, 150)];
     // Create subView buttons
     UIButton *selectImageButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [selectImageButton addTarget:self action:@selector(selectImagePressed:) forControlEvents:UIControlEventTouchUpInside];
@@ -67,9 +83,17 @@
     [takeImageButton setTitle:@"Take Image" forState:UIControlStateNormal];
     takeImageButton.frame = CGRectMake(0, 35, 150, 25);
     // Add buttons to subview
-    [subView addSubview:selectImageButton];
-    [subView addSubview:takeImageButton];
-    [self.view addSubview:subView];
+    [self.imageMenuView addSubview:selectImageButton];
+    [self.imageMenuView addSubview:takeImageButton];
+}
+
+- (void)singleTapping:(UIGestureRecognizer *)recognizer
+{
+    if ([self.imageMenuView isDescendantOfView:self.view]) {
+        [self.imageMenuView removeFromSuperview];
+    } else {
+        [self.view addSubview:self.imageMenuView];
+    }
 }
 
 - (IBAction)selectImagePressed:(id)sender
@@ -128,6 +152,16 @@
     [manager startUpdatingLocation];
 }
 
+#pragma mark Handle POST data
+
+- (void)handlePostData
+{
+    NSString *treasureId = [self.dropReply objectForKey:@"id"];
+    if (treasureId) {
+        [self uploadImage:treasureId];
+    }
+}
+
 #pragma mark CLLocationManagerDelegate Methods
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
@@ -152,6 +186,7 @@
 - (NSMutableDictionary *)setRequestBody
 {
     _params = [[NSMutableDictionary alloc] init];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     [_params setObject:self.titleTextField.text forKey:@"title"];
     [_params setObject:self.messageTextField.text forKey:@"text"];
@@ -160,7 +195,7 @@
     
 //    [_params setObject:self.latitude forKey:@"latitude"];
 //    [_params setObject:self.longitude forKey:@"longitude"];
-//    [_params setObject: forKey:@"user_id"];
+    [_params setObject:[defaults objectForKey:@"token"] forKey:@"user_id"];
 
     
     return _params;
@@ -172,7 +207,6 @@
     // Disable the refresh button during request
     [self.dropButton setEnabled:NO];
     // Create the request
-    //NSString *url = [NSString stringWithFormat:@"http://treasurely.no-ip.org:8000/treasures/%@/%@", self.latitude, self.longitude];
     NSString *base = [[NSUserDefaults standardUserDefaults] stringForKey:@"baseUrl"];
     NSString *url = [NSString stringWithFormat:@"%@%s", base, "treasure"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -186,16 +220,7 @@
     NSData *requestBodyData = [NSJSONSerialization dataWithJSONObject:_params options:0 error:&error];
     [request setHTTPBody:requestBodyData];
     
-    // Create connection
-    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
-    // Ensure connection was created
-    if (self.connection) {
-        // Start request
-        [self.connection start];
-    } else {
-        // Connection failed
-    }
-
+    [self createConnection:request];
 }
 
 - (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
@@ -210,16 +235,110 @@
           [[error userInfo] objectForKey:NSURLErrorFailingURLStringErrorKey]);
 }
 
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
 {
-    // Re-enable drop button
-    [self.dropButton setEnabled:YES];
-    // Clear connection
-    self.connection = nil;
+    // Reset buffer length
+    [self.buffer setLength:0];
 }
 
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    // Append data to buffer
+    [self.buffer appendData:data];
+}
 
+- (void)createConnection:(NSMutableURLRequest *)request
+{
+    // Create connection
+    self.connection = [NSURLConnection connectionWithRequest:request delegate:self];
+    // Ensure connection was created
+    if (self.connection) {
+        // Initialize buffer
+        self.buffer = [NSMutableData data];
+        // Start request
+        [self.connection start];
+    } else {
+        // Connection failed
+    }
+}
 
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // Dispatch from main queue for json processing
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSError *error = nil;
+        self.dropReply = [NSJSONSerialization JSONObjectWithData:_buffer options:kNilOptions error:&error];
+        
+        // Back to main queu
+        dispatch_async(dispatch_get_main_queue(), ^{
+            // Check for any error
+            if (!error) {
+                [self handlePostData];
+            } else {
+                // Request failed
+            }
+            
+            // Re-enable drop button
+            [self.dropButton setEnabled:YES];
+            // Clear connection and buffer
+            self.connection = nil;
+            self.buffer = nil;
+        });
+    });
+}
+
+- (void)uploadImage:(NSString *)treasureId
+{
+    NSString *base = [[NSUserDefaults standardUserDefaults] stringForKey:@"baseUrl"];
+    NSString *url = [NSString stringWithFormat:@"%@%s", base, "upload"];
+    NSURL *requestUrl = [NSURL URLWithString:url];
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:requestUrl
+                                                                cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                            timeoutInterval:60];
+    
+    [request setHTTPMethod:@"POST"];
+    
+    // Add a header field named Content-Type with a value
+    NSString *boundary = @"----WebKitFormBoundarycC4YiaUFwM44F6rT";
+    
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    
+    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
+    // end of what we've added to the header
+    
+    // the body of the post
+    NSMutableData *body = [NSMutableData data];
+    // Add treasure id to body
+    [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[@"Content-Disposition: form-data; name=\"id\"\r\n\r\n"
+                      dataUsingEncoding:NSUTF8StringEncoding]];
+    [body appendData:[treasureId  dataUsingEncoding:NSUTF8StringEncoding]];
+    // Now we need to append the different data 'segments'. We first start by adding the boundary.
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+	
+    // Append the image
+    [body appendData:[@"Content-Disposition: form-data; name=\"file\"; filename=\"iphone-upload.jpg\"\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // We now need to tell the receiver what content type we have
+    [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    // Convert image to NSData
+    NSData *imageData = [NSData dataWithData:UIImageJPEGRepresentation(self.imageView.image, 1.0)];
+    // Append the actual image data
+    [body appendData:[NSData dataWithData:imageData]];
+    
+    // Delimiting boundary
+    [body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+	
+    // Add body to request
+    [request setHTTPBody:body];
+    
+    NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request
+                                                                  delegate:NO
+                                                          startImmediately:NO]; 
+    
+    [connection start];
+}
 
 
 @end

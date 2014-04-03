@@ -45,10 +45,10 @@
     self.loginReply = [[NSMutableDictionary alloc] init];
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+    // Set url prefix to NSDefaults
     [defaults setObject:@"http://treasurely.no-ip.org:7000/" forKey:@"baseUrl"];
     [defaults synchronize];
-    
+    // If NSDefaults contains key 'token' skip login
     if([defaults objectForKey:@"token"]) {
         [self performSegueWithIdentifier:@"ShowTreasures" sender:self];
     }
