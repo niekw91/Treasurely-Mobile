@@ -47,7 +47,7 @@
     manager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];
     self.nearbyTreasuresArray = [[NSArray alloc] init];
-    [self sendRequest:nil];
+    //[self sendRequest:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -144,13 +144,14 @@
 - (IBAction)sendRequest:(id)sender
 {
     // Use geolocater to define current location
-    //[self getCurrentLocation];
+    [self getCurrentLocation];
     // Disable the refresh button during request
     [self.refreshButton setEnabled:NO];
     // Create the request
     //NSString *url = [NSString stringWithFormat:@"http://treasurely.no-ip.org:8000/treasures/%@/%@", self.latitude, self.longitude];
     NSString *base = [[NSUserDefaults standardUserDefaults] stringForKey:@"baseUrl"];
-    NSString *url = [NSString stringWithFormat:@"%@%s", base, "treasures/51.868809/5.737385"];
+   // NSString *url = [NSString stringWithFormat:@"%@%s", base, "treasures/51.868809/5.737385"];
+    NSString *url = [NSString stringWithFormat:@"%@%s/%@/%@", base, "treasures", self.latitude, self.longitude];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
     // Create connection
     self.connection = [NSURLConnection connectionWithRequest:request delegate:self];

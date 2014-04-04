@@ -63,6 +63,10 @@
     geocoder = [[CLGeocoder alloc] init];
     // Initialize the  image menu view
     [self createImageMenuView];
+    // Set border on imageview
+    self.imageView.layer.borderColor = [UIColor lightGrayColor].CGColor;
+    self.imageView.layer.borderWidth = 1.0f;
+    self.imageView.layer.cornerRadius = 5.0;
     // Set single  tap gesture on imageview
     [self.imageView setUserInteractionEnabled:YES];
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapping:)];
@@ -156,9 +160,13 @@
 
 - (void)handlePostData
 {
-    NSString *treasureId = [self.dropReply objectForKey:@"id"];
-    if (treasureId) {
-        [self uploadImage:treasureId];
+    if(self.imageView.image) {
+        NSString *treasureId = [self.dropReply objectForKey:@"id"];
+        if (treasureId) {
+            [self uploadImage:treasureId];
+        }
+    } else {
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -190,11 +198,11 @@
     
     [_params setObject:self.titleTextField.text forKey:@"title"];
     [_params setObject:self.messageTextField.text forKey:@"text"];
-    [_params setObject:@"51.868809" forKey:@"latitude"];
-    [_params setObject:@"5.737385" forKey:@"longitude"];
+    //[_params setObject:@"51.868809" forKey:@"latitude"];
+    //[_params setObject:@"5.737385" forKey:@"longitude"];
     
-//    [_params setObject:self.latitude forKey:@"latitude"];
-//    [_params setObject:self.longitude forKey:@"longitude"];
+    [_params setObject:self.latitude forKey:@"latitude"];
+    [_params setObject:self.longitude forKey:@"longitude"];
     [_params setObject:[defaults objectForKey:@"token"] forKey:@"user_id"];
 
     
@@ -203,7 +211,7 @@
 
 - (IBAction)dropTreasureAction:(id)sender {
     // Use geolocater to define current location
-    //[self getCurrentLocation];
+    [self getCurrentLocation];
     // Disable the refresh button during request
     [self.dropButton setEnabled:NO];
     // Create the request
@@ -338,6 +346,8 @@
                                                           startImmediately:NO]; 
     
     [connection start];
+    
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 

@@ -13,7 +13,7 @@
 @property (nonatomic, strong) NSMutableData *buffer;
 @property (nonatomic, strong) NSURLConnection *connection;
 
-@property (weak, nonatomic) IBOutlet UITableView *commentView;
+@property (strong, nonatomic) IBOutlet UITableView *commentView;
 
 @end
 
@@ -31,6 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.commentView.dataSource = self;
 	// Do any additional setup after loading the view.
     self.title = [self.treasureDetail objectForKey:@"title"];
     self.treasureTitle.text = [self.treasureDetail objectForKey:@"text"];
@@ -72,15 +73,17 @@
     NSDictionary *tempDictionary = [self.commentsArray objectAtIndex:indexPath.row];
     
     cell.textLabel.text= [tempDictionary objectForKey:@"text"];
+    UIFont *font = [UIFont fontWithName:@"Arial" size:12.0];
+    cell.textLabel.font = font;
     
-    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    cell.accessoryType = NO;
     
     return cell;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 30.0;
+    return 4.0;
 }
 
 - (IBAction)sendRequest:(id)sender {
