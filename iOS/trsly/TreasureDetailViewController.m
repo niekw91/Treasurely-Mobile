@@ -31,6 +31,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Set UIToolbar invisible
+    [self.navigationController setToolbarHidden:NO];
     self.commentView.dataSource = self;
 	// Do any additional setup after loading the view.
     self.title = [self.treasureDetail objectForKey:@"title"];

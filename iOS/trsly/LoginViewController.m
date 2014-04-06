@@ -38,6 +38,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Set UIToolbar invisible
+    [self.navigationController setToolbarHidden:YES];
     // Hide back button
     self.navigationItem.hidesBackButton = YES;
 	// Do any additional setup after loading the view.
@@ -73,11 +75,6 @@
     if ([[segue identifier] isEqualToString:@"ShowTreasures"]) {
         TreasureViewController *treasureViewController = (TreasureViewController *)segue.destinationViewController;
     }
-}
-- (IBAction)action:(id)sender {
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    self.label.text = [defaults objectForKey:@"token"];
 }
 
 #pragma mark Handle POST data

@@ -53,6 +53,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    // Set UIToolbar invisible
+    [self.navigationController setToolbarHidden:NO];
 	// Do any additional setup after loading the view.
     self.dropReply = [[NSMutableDictionary alloc] init];
     // Set textfield delegates to collapse  on enter key
@@ -72,6 +74,8 @@
     UITapGestureRecognizer *singleTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(singleTapping:)];
     [singleTap setNumberOfTapsRequired:1];
     [self.imageView addGestureRecognizer:singleTap];
+    // Use geolocater to define current location
+    [self getCurrentLocation];
 }
 
 - (void)createImageMenuView
@@ -211,7 +215,7 @@
 
 - (IBAction)dropTreasureAction:(id)sender {
     // Use geolocater to define current location
-    [self getCurrentLocation];
+    //[self getCurrentLocation];
     // Disable the refresh button during request
     [self.dropButton setEnabled:NO];
     // Create the request
