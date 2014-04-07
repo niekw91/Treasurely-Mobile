@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.esteniek.treasurely_android.DropTreasureActivity$PlaceholderFragment" >
+   
+    <RelativeLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:layout_weight="1" >
+    
+        <!-- Drop Treasure Media -->
+	    <ImageView
+	        android:id="@+id/drop_treasure_media"
+	        android:layout_width="match_parent"
+	        android:layout_height="match_parent"
+	        android:contentDescription="image placeholder"
+	        android:scaleType="centerCrop"
+	        android:src="@drawable/default_background" />
+	    
+	    <!-- Drop Treasure Title -->
+	    <TextView
+	        android:id="@+id/drop_treasure_title"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/drop_treasure_media"
+	        android:layout_alignLeft="@+id/drop_treasure_media"
+	        android:layout_alignRight="@+id/drop_treasure_media"
+	        android:layout_alignTop="@+id/drop_treasure_media"
+		    android:paddingBottom="@dimen/activity_vertical_margin"
+		    android:paddingLeft="@dimen/activity_horizontal_margin"
+		    android:paddingRight="@dimen/activity_horizontal_margin"
+		    android:paddingTop="@dimen/activity_vertical_margin"
+	        android:layout_margin="1dp"
+	        android:gravity="center"
+	        android:text="TreasureBox"
+	        android:textColor="#ffffff"
+	        android:textStyle="bold" />
+
+	    <ImageButton
+	        android:id="@+id/drop_treasure_camera"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_alignBottom="@+id/drop_treasure_title"
+	        android:layout_alignRight="@+id/drop_treasure_title"
+	        android:background="@android:color/transparent"
+	        android:contentDescription="camera icon"
+	        android:layout_margin="@dimen/activity_horizontal_margin"
+	        android:src="@drawable/ic_action_camera" />
+        
+    </RelativeLayout>
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+	    android:paddingBottom="@dimen/activity_vertical_margin"
+	    android:paddingLeft="@dimen/activity_horizontal_margin"
+	    android:paddingRight="@dimen/activity_horizontal_margin"
+	    android:paddingTop="@dimen/activity_vertical_margin" >
+
+        <EditText
+            android:id="@+id/drop_treasure_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Treasure Title" />
+
+        <EditText
+            android:id="@+id/drop_treasure_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/drop_treasure_title"
+            android:ems="10"
+	        android:gravity="left|top"
+	        android:inputType="textMultiLine"
+	        android:hint="Treasure Text" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
+
+</LinearLayout>
