@@ -40,11 +40,15 @@
     return self;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    // Set UIToolbar visible
+    [self.navigationController setToolbarHidden:NO];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Set UIToolbar visible
-    [self.navigationController setToolbarHidden:NO];
     
     manager = [[CLLocationManager alloc] init];
     geocoder = [[CLGeocoder alloc] init];

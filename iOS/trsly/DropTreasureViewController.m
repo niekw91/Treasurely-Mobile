@@ -50,11 +50,15 @@
     return YES;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    // Set UIToolbar visible
+    [self.navigationController setToolbarHidden:YES];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Set UIToolbar invisible
-    [self.navigationController setToolbarHidden:NO];
 	// Do any additional setup after loading the view.
     self.dropReply = [[NSMutableDictionary alloc] init];
     // Set textfield delegates to collapse  on enter key
