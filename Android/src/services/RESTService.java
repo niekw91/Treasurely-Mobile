@@ -69,12 +69,16 @@ public class RESTService {
 	 * Drop Treasure
 	 * 
 	 * @param json
+	 * @return 
 	 */
-	public void dropTreasure(String json) {
+	public String dropTreasure(List<NameValuePair> nvp) {
 		
 		if (isConnected()) {
-			new HttpPOSTTask().execute(baseUrl + "/treasure/", json);
+			// Set params to given nvp
+			this.nvp = nvp;
+			return postData(baseUrl + "/treasure/");
 		}
+		return null;
 	}
 	
 	/**
