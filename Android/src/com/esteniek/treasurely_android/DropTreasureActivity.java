@@ -1,15 +1,13 @@
 package com.esteniek.treasurely_android;
 
-import services.LocationService;
-import services.RESTService;
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+
+import com.esteniek.treasurely_android.services.LocationService;
+import com.esteniek.treasurely_android.services.RESTService;
 
 public class DropTreasureActivity extends Activity implements
 DropTreasureFragment.OnTreasureDroppedListener {
@@ -22,6 +20,8 @@ DropTreasureFragment.OnTreasureDroppedListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		setContentView(R.layout.activity_drop_treasure);
 		
 		if (savedInstanceState == null) {
@@ -45,11 +45,11 @@ DropTreasureFragment.OnTreasureDroppedListener {
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-//		if (id == R.id.action_drop) {
-//			dropTreasure();
-//			return true;
-//		}
+		switch (item.getItemId()) {
+			case android.R.id.home:
+				startActivity(new Intent(this, MainActivity.class));
+	        break;
+		}
 		return super.onOptionsItemSelected(item);
 	}
 	

@@ -8,6 +8,11 @@
         android:icon="@drawable/ic_action_email"
         android:title="@string/action_drop" />
     <item 
+        android:id="@+id/action_logout"
+        android:showAsAction="ifRoom"
+        android:icon="@drawable/ic_action_cancel"
+        android:title="@string/action_cancel" />
+    <item 
         android:id="@+id/action_refresh"
         android:showAsAction="ifRoom"
         android:icon="@drawable/ic_action_refresh"

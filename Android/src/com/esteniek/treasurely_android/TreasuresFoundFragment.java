@@ -3,11 +3,8 @@ package com.esteniek.treasurely_android;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import services.LocationService;
-import services.RESTService;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
@@ -16,10 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.esteniek.treasurely_android.services.LocationService;
+import com.esteniek.treasurely_android.services.RESTService;
 
 /**
  * A fragment representing a list of Items.
@@ -46,8 +45,14 @@ public class TreasuresFoundFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		treasures = new ArrayList<Treasure>();
+		// Start location service
+		location = new LocationService(getActivity());
+		// Start rest service
 		rest = new RESTService(getActivity());
-		//findTreasure();
+		// Search for treasure
+		findTreasure();
 	}
 
 	@Override
@@ -80,7 +85,7 @@ public class TreasuresFoundFragment extends Fragment {
 		} else {
 			throw new ClassCastException(
 					activity.toString()
-							+ " must implemenet TreasuresFoundFragment.OnItemSelectedListener");
+							+ " must implement TreasuresFoundFragment.OnItemSelectedListener");
 		}
 	}
 
@@ -92,17 +97,21 @@ public class TreasuresFoundFragment extends Fragment {
 
 	private void setListViewAdapter(ListView listView) {
 
-		adapter = new TreasureAdapter(this.getActivity(),
-				R.layout.treasure_found_item, treasures);
 		if (treasures != null) {
-		listView.setAdapter(adapter);
+			adapter = new TreasureAdapter(this.getActivity(),
+					R.layout.treasure_found_item, treasures);
+
+			listView.setAdapter(adapter);
 		}
 	}
 
 	private void findTreasure() {
 
-		new FindTreasureTask().execute(getResources().getString(R.string.baseUrl) + "/treasures/"
-				+ location.getLatitude() + "/" + location.getLongitude());
+		String url = getResources().getString(R.string.baseUrl) + "/treasures/"
+				+ location.getLatitude() + "/" + location.getLongitude();
+		String testurl = "http://treasurely.no-ip.org:7000/treasures/37.334476/-122.039740";
+		//System.out.println("findTreasure url: " + url);
+		new FindTreasureTask().execute(testurl);
 	}
 
 	/**
@@ -116,7 +125,7 @@ public class TreasuresFoundFragment extends Fragment {
 		@Override
 		protected String doInBackground(String... params) {
 
-			return rest.POST(params[0], params[1]);
+			return rest.findTreasures(params[0]);
 		}
 
 		// onPostExecute displays the results of the AsyncTask.
@@ -130,25 +139,29 @@ public class TreasuresFoundFragment extends Fragment {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			//adapter.notifyDataSetChanged();
+			if (!treasures.isEmpty()) {
+				adapter.notifyDataSetChanged();
+			}
 		}
 	}
 	
 	private void setResult(String result) throws Exception {
 		
+		String title = "";
+		String text = "";
+		String media = "";
 		JSONArray array = new JSONArray(result);
+		System.out.println(array.length());
 		for (int i = 0; i < array.length(); i++) {
 		    JSONObject row = array.getJSONObject(i);
-		    String title = row.getString("title");
-		    String text = row.getString("text");
-		    String media = row.getString("media");
+		    title = row.getString("title");
+		    text = row.getString("text");
+		    media = row.getString("media");
 		    if(media != null) {
-		    	treasures.set(i, new Treasure(title, text, media));
+		    	treasures.add(new Treasure(title, text, media));
 		    } else {
-		    	treasures.set(i, new Treasure(title, text));
+		    	treasures.add(new Treasure(title, text));
 		    }
 		}
-		
 	}
-
 }

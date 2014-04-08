@@ -22,15 +22,16 @@ public class TreasureBoxActivity extends Activity {
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		setContentView(R.layout.activity_treasure_box);
+		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			String mtitle = extras.getString("title");
 			String mtext = extras.getString("text");
 			String mmedia = extras.getString("image");
 			TextView title = (TextView) findViewById(R.id.treasure_title);
-			title.setText(mtitle);
-			TextView text = (TextView) findViewById(R.id.treasure_title);
-			text.setText(mtext);
+			title.setText(mtitle+"\n\n"+ mtext);
+//			TextView text = (TextView) findViewById(R.id.treasure_title);
+//			text.setText(mtext);
 			if (mmedia != null) {
 				ImageView iv = (ImageView) findViewById(R.id.treasure_media);
 				String url = this.getApplicationContext().getString(
@@ -89,7 +90,10 @@ public class TreasureBoxActivity extends Activity {
 			// New Intent to launch a Drop Treasure Activity
 			startActivity(new Intent(this, DropTreasureActivity.class));
 			break;
-		default:
+		case android.R.id.home:
+			startActivity(new Intent(this, MainActivity.class));
+	        break;
+	    default:
 			return super.onOptionsItemSelected(item);
 		}
 
