@@ -8,6 +8,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -52,18 +53,15 @@ public class MainActivity extends Activity implements
 	 * @return
 	 */
 	public boolean alreadyLoggedIn() {
-		boolean userIdPresent = true;
+		boolean userIdPresent = false;
 
 		// Get shared preferences
-		prefs = getPreferences(MODE_PRIVATE);
+		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
-		// Get userId
-		String userId = prefs.getString("userId", null);
-
-		// Check if userid is present
-		if (userId != null) {
+		String token = prefs.getString("userId", "");
+		if (token != null) {
 			userIdPresent = true;
-		}
+		} 
 
 		return userIdPresent;
 	}
