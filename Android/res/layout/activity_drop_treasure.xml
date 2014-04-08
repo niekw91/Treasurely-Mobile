@@ -6,6 +6,7 @@
     tools:context="com.esteniek.treasurely_android.DropTreasureActivity"
     tools:ignore="MergeRootFrame">
     
+<<<<<<< HEAD
     <fragment 
         android:id="@+id/treasure_drop"
         android:layout_width="match_parent"
@@ -16,3 +17,6 @@
     
 </FrameLayout>
 
+=======
+</FrameLayout>
+>>>>>>> 282284004ea5c36aab0901eddd44bda94a7804fc

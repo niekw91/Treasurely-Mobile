@@ -1,4 +1,4 @@
-package services;
+package com.esteniek.treasurely_android.services;
 
 import android.app.Activity;
 import android.content.Context;

@@ -6,6 +6,7 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_drop_treasure">Drop Treasure</string>
     <string name="action_refresh">Refresh</string>
+    <string name="action_cancel">Cancel</string>
     <string name="action_drop">Drop</string>
     <string name="title_activity_treasure_box">TreasureBox</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

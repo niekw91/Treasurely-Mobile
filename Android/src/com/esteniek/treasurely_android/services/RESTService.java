@@ -1,4 +1,4 @@
-package services;
+package com.esteniek.treasurely_android.services;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -58,11 +58,18 @@ public class RESTService {
 	 */
 	public void findTreasures(double lat, double lng) {
 		if (isConnected()) {
-			String url = _context.getResources().getString(R.string.baseUrl) + "treasures/" + lat
-					+ "/" + lng;
-			System.out.println("GET request to url: "+url);
+			String url = _context.getResources().getString(R.string.baseUrl)
+					+ "treasures/" + lat + "/" + lng;
+			System.out.println("GET request to url: " + url);
 			new HttpGETTask().execute(url);
 		}
+	}
+
+	public String findTreasures(String url) {
+		if (isConnected()) {
+			return GET(url);
+		}
+		return "";
 	}
 
 	/**
@@ -71,8 +78,13 @@ public class RESTService {
 	 * @param json
 	 * @return 
 	 */
+<<<<<<< HEAD:Android/src/services/RESTService.java
 	public String dropTreasure(List<NameValuePair> nvp) {
 		
+=======
+	public void dropTreasure(String json) {
+
+>>>>>>> 282284004ea5c36aab0901eddd44bda94a7804fc:Android/src/com/esteniek/treasurely_android/services/RESTService.java
 		if (isConnected()) {
 			// Set params to given nvp
 			this.nvp = nvp;
@@ -102,7 +114,7 @@ public class RESTService {
 	 * @return
 	 */
 	public static String GET(String url) {
-		
+
 		InputStream inputStream = null;
 		String result = "";
 		try {
@@ -132,7 +144,7 @@ public class RESTService {
 	}
 
 	public String POST(String url, String json) {
-		
+
 		InputStream inputStream = null;
 		String result = "";
 
@@ -212,7 +224,7 @@ public class RESTService {
 
 	private static String convertInputStreamToString(InputStream inputStream)
 			throws IOException {
-		
+
 		BufferedReader bufferedReader = new BufferedReader(
 				new InputStreamReader(inputStream));
 		String line = "";
@@ -232,7 +244,7 @@ public class RESTService {
 	 * 
 	 */
 	private class HttpPOSTTask extends AsyncTask<String, Void, String> {
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 
@@ -243,10 +255,7 @@ public class RESTService {
 		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
-			Toast.makeText(_context, "Received!", Toast.LENGTH_LONG).show();
-			// response.setText(result);
-			System.out.println(result);
-			
+			System.out.println("HttpGETTask response: "+result);
 		}
 	}
 
@@ -257,7 +266,7 @@ public class RESTService {
 	 * 
 	 */
 	private class HttpGETTask extends AsyncTask<String, Void, String> {
-		
+
 		@Override
 		protected String doInBackground(String... params) {
 
@@ -267,9 +276,7 @@ public class RESTService {
 		// onPostExecute displays the results of the AsyncTask.
 		@Override
 		protected void onPostExecute(String result) {
-			Toast.makeText(_context, "Received!", Toast.LENGTH_LONG).show();
-			// response.setText(result);
-			System.out.println("HttpGETTask response: "+result);
+			System.out.println("HttpGETTask response: " + result);
 		}
 	}
 
@@ -279,7 +286,7 @@ public class RESTService {
 	 * @return boolean
 	 */
 	public boolean isConnected() {
-		
+
 		ConnectivityManager connMgr = (ConnectivityManager) _context
 				.getSystemService(Activity.CONNECTIVITY_SERVICE);
 		NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
