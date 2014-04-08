@@ -32,13 +32,16 @@ public class TreasureBoxActivity extends Activity {
 			title.setText(mtitle+"\n\n"+ mtext);
 //			TextView text = (TextView) findViewById(R.id.treasure_title);
 //			text.setText(mtext);
-			if (mmedia != null) {
-				ImageView iv = (ImageView) findViewById(R.id.treasure_media);
+			ImageView iv = (ImageView) findViewById(R.id.treasure_media);
+			mmedia = (mmedia != null) ? mmedia : "";
+			if (mmedia != "") {
 				String url = this.getApplicationContext().getString(
 						R.string.baseUrl)
 						+ "public" + mmedia;
 
 				new DownloadImageTask(iv).execute(url);
+			} else {
+				iv.setImageResource(R.drawable.default_background);
 			}
 		}
 	}

@@ -14,7 +14,6 @@ import com.esteniek.treasurely_android.services.RESTService;
 public class MainActivity extends Activity implements
 		TreasuresFoundFragment.OnItemSelectedListener {
 
-	private SharedPreferences prefs;
 	private RESTService rest;
 	private static LocationService location;
 
@@ -47,7 +46,7 @@ public class MainActivity extends Activity implements
 		// Start rest service
 		rest = new RESTService(getBaseContext());
 		// Load treasures
-		loadTreasures();
+		findTreasures();
 	}
 
 	/**
@@ -59,23 +58,40 @@ public class MainActivity extends Activity implements
 		boolean userIdPresent = false;
 
 		// Get shared preferences
-		prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
 
 		String token = prefs.getString("userId", "");
-		if (token != null) {
+		if (token != "") {
 			userIdPresent = true;
+			System.out.println("Current token: " + prefs.getString("userId", ""));
 		} 
 
 		return userIdPresent;
 	}
 
+	private void logout() {
+
+		// Get shared preferences
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		
+		// Clear prefs containing userkey
+		prefs.edit().clear().commit();
+		
+		// Restart Main Activity
+		startActivity(new Intent(this, MainActivity.class));
+	}
+
 	/**
 	 * Load treasures
 	 */
-	private void loadTreasures() {
-		
-		//rest.findTreasures(location.getLatitude(), location.getLongitude());
-		rest.findTreasures(37.334476, -122.039740);
+	private void findTreasures() {
+		Boolean locationWorking = location.getLatitude() != 0.0 || location.getLongitude() != 0.0;
+		if (locationWorking) {
+			rest.findTreasures(location.getLatitude(), location.getLongitude());
+		} else {
+			// use hard coded coordinates
+			rest.findTreasures(37.422006,-122.084095);
+		}
 	}
 
 	@Override
@@ -96,7 +112,7 @@ public class MainActivity extends Activity implements
 			break;
 		case R.id.action_refresh:
 			// Reload treasures
-			loadTreasures();
+			findTreasures();
 			break;
 		case R.id.action_logout:
 			// Reload treasures
@@ -107,12 +123,6 @@ public class MainActivity extends Activity implements
 		}
 
 		return true;
-	}
-
-	private void logout() {
-		
-		// Clear prefs containing userkey
-		prefs.edit().clear().commit();
 	}
 
 	@Override

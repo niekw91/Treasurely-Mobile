@@ -20,7 +20,6 @@ public class LocationService implements LocationListener{
 	
 	public LocationService(Context context) {
 		_context = context;
-		//new init().execute();
 		init();
 	}
 	
@@ -39,37 +38,12 @@ public class LocationService implements LocationListener{
 	      System.out.println("Provider " + provider + " has been selected.");
 	      onLocationChanged(location);
 	    } else {
-	    	Toast.makeText(_context, "Location not available",
-	  			   Toast.LENGTH_LONG).show();
+//	    	Toast.makeText(_context, "Location not available",
+//	  			   Toast.LENGTH_LONG).show();
+	    	System.out.println("Location not available");
 	    }
 		
 	}
-
-//	private class init extends AsyncTask<Void, Void, Void> {
-//
-//		@Override
-//		protected Void doInBackground(Void... arg0) {
-//			
-//			// Get the location manager
-//		    locationManager = (LocationManager) _context.getSystemService(Context.LOCATION_SERVICE);
-//		    // Define the criteria how to select the location provider -> use
-//		    // default
-//		    Criteria criteria = new Criteria();
-//		    provider = locationManager.getBestProvider(criteria, false);
-//		    Location location = locationManager.getLastKnownLocation(provider);
-//
-//		    // Initialize the location fields
-//		    if (location != null) {
-//		      System.out.println("Provider " + provider + " has been selected.");
-//		      onLocationChanged(location);
-//		    } else {
-//		    	Toast.makeText(_context, "Location not available",
-//		  			   Toast.LENGTH_LONG).show();
-//		    }
-//			return null;
-//		}
-//		
-//	}
 	
 	/**
 	 * Get latitude
@@ -105,19 +79,22 @@ public class LocationService implements LocationListener{
 
 	@Override
 	public void onProviderDisabled(String provider) {
-		Toast.makeText(_context, "Provider disabled",
-	  			   Toast.LENGTH_LONG).show();
+//		Toast.makeText(_context, "Provider disabled",
+//	  			   Toast.LENGTH_LONG).show();
+		System.out.println("Provider disabled");
 	}
 
 	@Override
 	public void onProviderEnabled(String provider) {
-		Toast.makeText(_context, "Enabled new provider " + provider,
-		        Toast.LENGTH_SHORT).show();
+//		Toast.makeText(_context, "Enabled new provider " + provider,
+//		        Toast.LENGTH_SHORT).show();
+		System.out.println("Enabled new provider " + provider);
 	}
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
-		Toast.makeText(_context, "Provider status changed ",
-		        Toast.LENGTH_SHORT).show();		
+//		Toast.makeText(_context, "Provider status changed ",
+//		        Toast.LENGTH_SHORT).show();
+		System.out.println("Provider status changed");
 	}
 }

@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import com.esteniek.treasurely_android.services.LocationService;
 import com.esteniek.treasurely_android.services.RESTService;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -126,39 +127,6 @@ DropTreasureFragment.OnTreasureDroppedListener {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
-	/**
-	 * Build JSON string for POST 
-	 * @return
-	 */
-	public String buildJSON() {
-		String json = "{";
-		if (true) {
-			json += "\"user_id\":\"5331d1968c5302080e841894\"";
-		}
-		if (true) {
-			if (json != "{") {json += ",";}
-			json += "\"latitude\":" + location.getLatitude() ;
-		}
-		if (true) {
-			if (json != "{") {json += ",";}
-			json += "\"longitude\":" + location.getLongitude();
-		}
-		if (_text != null) {
-			if (json != "{") {json += ",";}
-			json += "\"text\":" + _text;
-		}
-		if (_title != null) {
-			if (json != "{") {json += ",";}
-			json += "\"title\":" + _title;
-		}
-		if (_media != null) {
-			if (json != "{") {json += ",";}
-			json += "\"title\":" + _media;
-		}
-		json += "}";
-		return json;
-	}
 
 	@Override
 	public void onTreasureDropped(String title, String text, String media) {
@@ -173,6 +141,9 @@ DropTreasureFragment.OnTreasureDroppedListener {
 	public void dropTreasure() {
 		mDropTask = new DropTreasureTask();
 		mDropTask.execute((Void) null);
+		
+		// Restart Main Activity
+		startActivity(new Intent(this, MainActivity.class));
 	}
 
 	
