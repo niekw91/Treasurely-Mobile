@@ -1,12 +1,24 @@
 package com.esteniek.treasurely_android;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.esteniek.treasurely_android.services.RESTService;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -32,6 +44,9 @@ public class LoginActivity extends Activity {
 	 */
 	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
 
+
+	private SharedPreferences prefs;
+	private ArrayList<String> loginResult = new ArrayList<String>();
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
 	 */
@@ -147,6 +162,7 @@ public class LoginActivity extends Activity {
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
+			
 		}
 	}
 
@@ -199,12 +215,18 @@ public class LoginActivity extends Activity {
 		@Override
 		protected Boolean doInBackground(Void... params) {
 			// TODO: attempt authentication against a network service.
+			List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
+		    nvp.add(new BasicNameValuePair("email", mEmail));
+		    nvp.add(new BasicNameValuePair("password", mPassword));
 
+			RESTService rest = new RESTService(getBaseContext());
+			String result = rest.login(nvp);
+			
 			try {
-				// Simulate network access.
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				return false;
+				setResult(result);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 
 			for (String credential : DUMMY_CREDENTIALS) {
@@ -214,9 +236,13 @@ public class LoginActivity extends Activity {
 					return pieces[1].equals(mPassword);
 				}
 			}
+			String token = prefs.getString("userId", "");
+			if (token != null) {
+				return true;
+			} else {
+				return false;
+			}
 
-			// TODO: register the new account here.
-			return true;
 		}
 
 		@Override
@@ -237,6 +263,21 @@ public class LoginActivity extends Activity {
 		protected void onCancelled() {
 			mAuthTask = null;
 			showProgress(false);
+		}
+		
+		private void setResult(String result) throws Exception {
+			JSONObject mainObject = new JSONObject(result);
+			
+			String success = mainObject.getString("success");
+			String token = mainObject.getString("token");
+			
+			if(success == "true") {
+				prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+				Editor editor = prefs.edit();
+				editor.putString("userId", token);
+				editor.commit();
+			}
+			
 		}
 	}
 }

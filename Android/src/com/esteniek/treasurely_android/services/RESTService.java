@@ -4,31 +4,37 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.json.JSONObject;
-
-import com.esteniek.treasurely_android.R;
-import com.esteniek.treasurely_android.Treasure;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.esteniek.treasurely_android.R;
+import com.esteniek.treasurely_android.Treasure;
 
 public class RESTService {
 
 	private Context _context;
 	private String baseUrl = "http://treasurely.no-ip.org:7000";
 	private Treasure[] treasures;
+	
+	private List<NameValuePair> nvp = new ArrayList<NameValuePair>(2);
 
 	/**
 	 * Constructor
@@ -76,6 +82,20 @@ public class RESTService {
 		if (isConnected()) {
 			new HttpPOSTTask().execute(baseUrl + "/treasure/", json);
 		}
+	}
+	
+	/**
+	 * Login
+	 * 
+	 * @param List<NameValuePair>
+	 */
+	public String login(List<NameValuePair> nvp) {
+		if (isConnected()) {
+			// Set params to given nvp
+			this.nvp = nvp;
+			return postData(baseUrl + "/login");
+		}
+		return null;
 	}
 
 	/**
@@ -156,6 +176,42 @@ public class RESTService {
 		}
 		return result;
 	}
+	
+	private String postData(String url) {
+		// Create response
+		HttpResponse response = null;
+	    // Create a new HttpClient and Post Header
+	    HttpClient httpclient = new DefaultHttpClient();
+	    HttpPost httppost = new HttpPost(url);
+
+		InputStream inputStream = null;
+		String result = "";
+	    
+		try {
+		    // Add your data
+		    httppost.setEntity(new UrlEncodedFormEntity(nvp));
+	
+		    // Execute HTTP Post Request
+		    response = httpclient.execute(httppost);
+		    
+			// receive response as inputStream
+			inputStream = response.getEntity().getContent();
+		    
+			// convert inputstream to string
+			if (inputStream != null) {
+				result = convertInputStreamToString(inputStream);
+			} else {
+				result = "Did not work!";
+			}
+	
+		} catch (ClientProtocolException e) {
+		    // TODO Auto-generated catch block
+		} catch (IOException e) {
+		    // TODO Auto-generated catch block
+		}
+		
+		return result;
+	}
 
 	private static String convertInputStreamToString(InputStream inputStream)
 			throws IOException {
@@ -183,7 +239,8 @@ public class RESTService {
 		@Override
 		protected String doInBackground(String... params) {
 
-			return POST(params[0], params[1]);
+			//return POST(params[0], params[1]);
+			return postData(params[0]);
 		}
 
 		// onPostExecute displays the results of the AsyncTask.
