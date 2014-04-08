@@ -33,8 +33,7 @@ public class TreasureBoxActivity extends Activity {
 //			TextView text = (TextView) findViewById(R.id.treasure_title);
 //			text.setText(mtext);
 			ImageView iv = (ImageView) findViewById(R.id.treasure_media);
-			mmedia = (mmedia != null) ? mmedia : "";
-			if (mmedia != "") {
+			if (!mmedia.isEmpty()) {
 				String url = this.getApplicationContext().getString(
 						R.string.baseUrl)
 						+ "public" + mmedia;
