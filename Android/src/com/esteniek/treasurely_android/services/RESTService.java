@@ -78,13 +78,8 @@ public class RESTService {
 	 * @param json
 	 * @return 
 	 */
-<<<<<<< HEAD:Android/src/services/RESTService.java
 	public String dropTreasure(List<NameValuePair> nvp) {
-		
-=======
-	public void dropTreasure(String json) {
 
->>>>>>> 282284004ea5c36aab0901eddd44bda94a7804fc:Android/src/com/esteniek/treasurely_android/services/RESTService.java
 		if (isConnected()) {
 			// Set params to given nvp
 			this.nvp = nvp;

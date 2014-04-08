@@ -1,6 +1,5 @@
 package com.esteniek.treasurely_android;
 
-<<<<<<< HEAD
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -22,8 +21,8 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.json.JSONObject;
 
-import services.LocationService;
-import services.RESTService;
+import com.esteniek.treasurely_android.services.LocationService;
+import com.esteniek.treasurely_android.services.RESTService;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -44,7 +43,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
-=======
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -53,7 +51,6 @@ import android.view.MenuItem;
 
 import com.esteniek.treasurely_android.services.LocationService;
 import com.esteniek.treasurely_android.services.RESTService;
->>>>>>> 282284004ea5c36aab0901eddd44bda94a7804fc
 
 public class DropTreasureActivity extends Activity implements
 DropTreasureFragment.OnTreasureDroppedListener {

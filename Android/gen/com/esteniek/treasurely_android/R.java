@@ -31,17 +31,17 @@ public final class R {
         public static final int ic_launcher=0x7f020006;
     }
     public static final class id {
-<<<<<<< HEAD
         public static final int action_drop=0x7f080016;
         public static final int action_forgot_password=0x7f080017;
-        public static final int action_refresh=0x7f080018;
+        public static final int action_logout=0x7f080018;
+        public static final int action_refresh=0x7f080019;
         public static final int container=0x7f080000;
-        public static final int drop_treasure_camera=0x7f08000e;
-        public static final int drop_treasure_frag=0x7f08000b;
-        public static final int drop_treasure_media=0x7f08000c;
-        public static final int drop_treasure_text=0x7f080010;
-        public static final int drop_treasure_title=0x7f08000f;
-        public static final int drop_treasure_title_preview=0x7f08000d;
+        public static final int drop_treasure_camera=0x7f08000d;
+        public static final int drop_treasure_frag=0x7f08000a;
+        public static final int drop_treasure_media=0x7f08000b;
+        public static final int drop_treasure_text=0x7f08000f;
+        public static final int drop_treasure_title=0x7f08000e;
+        public static final int drop_treasure_title_preview=0x7f08000c;
         public static final int email=0x7f080005;
         public static final int login=0x7f080007;
         public static final int login_form=0x7f080004;
@@ -51,39 +51,12 @@ public final class R {
         public static final int sign_in_button=0x7f080008;
         public static final int treasure_comments=0x7f080013;
         public static final int treasure_drop=0x7f080001;
+        public static final int treasure_frag=0x7f080010;
         public static final int treasure_list=0x7f080014;
         public static final int treasure_media=0x7f080011;
         public static final int treasure_title=0x7f080012;
-        public static final int treasureboxFragment=0x7f08000a;
-        public static final int treasures_found=0x7f080009;
+        public static final int treasureboxFragment=0x7f080009;
         public static final int txtTreasureTitle=0x7f080015;
-=======
-        public static final int action_drop=0x7f080015;
-        public static final int action_forgot_password=0x7f080016;
-        public static final int action_logout=0x7f080017;
-        public static final int action_refresh=0x7f080018;
-        public static final int container=0x7f080000;
-        public static final int drop_treasure_camera=0x7f08000c;
-        public static final int drop_treasure_frag=0x7f080009;
-        public static final int drop_treasure_media=0x7f08000a;
-        public static final int drop_treasure_text=0x7f08000e;
-        public static final int drop_treasure_title=0x7f08000d;
-        public static final int drop_treasure_title_preview=0x7f08000b;
-        public static final int email=0x7f080004;
-        public static final int login=0x7f080006;
-        public static final int login_form=0x7f080003;
-        public static final int login_status=0x7f080001;
-        public static final int login_status_message=0x7f080002;
-        public static final int password=0x7f080005;
-        public static final int sign_in_button=0x7f080007;
-        public static final int treasure_comments=0x7f080012;
-        public static final int treasure_frag=0x7f08000f;
-        public static final int treasure_list=0x7f080013;
-        public static final int treasure_media=0x7f080010;
-        public static final int treasure_title=0x7f080011;
-        public static final int treasureboxFragment=0x7f080008;
-        public static final int txtTreasureTitle=0x7f080014;
->>>>>>> 282284004ea5c36aab0901eddd44bda94a7804fc
     }
     public static final class layout {
         public static final int activity_drop_treasure=0x7f030000;
