@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:id="@+id/drop_treasure_frag"
     tools:context="com.esteniek.treasurely_android.DropTreasureActivity$PlaceholderFragment" >
    
     <RelativeLayout
@@ -21,7 +22,7 @@
 	    
 	    <!-- Drop Treasure Title -->
 	    <TextView
-	        android:id="@+id/drop_treasure_title"
+	        android:id="@+id/drop_treasure_title_preview"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:layout_alignBottom="@+id/drop_treasure_media"
@@ -42,8 +43,8 @@
 	        android:id="@+id/drop_treasure_camera"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:layout_alignBottom="@+id/drop_treasure_title"
-	        android:layout_alignRight="@+id/drop_treasure_title"
+	        android:layout_alignBottom="@+id/drop_treasure_title_preview"
+	        android:layout_alignRight="@+id/drop_treasure_title_preview"
 	        android:background="@android:color/transparent"
 	        android:contentDescription="camera icon"
 	        android:layout_margin="@dimen/activity_horizontal_margin"

@@ -9,5 +9,6 @@
     <string name="action_drop">Drop</string>
     <string name="title_activity_treasure_box">TreasureBox</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="baseUrl">http://treasurely.no-ip.org:7000/</string>
 
 </resources>

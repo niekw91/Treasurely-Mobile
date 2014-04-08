@@ -1,52 +1,99 @@
 package com.esteniek.treasurely_android;
 
+import java.io.InputStream;
+
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class TreasureBoxActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_treasure_box);
+		getActionBar().setDisplayHomeAsUpEnabled(true);
 
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+		setContentView(R.layout.activity_treasure_box);
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			String mtitle = extras.getString("title");
+			String mtext = extras.getString("text");
+			String mmedia = extras.getString("image");
+			TextView title = (TextView) findViewById(R.id.treasure_title);
+			title.setText(mtitle);
+			TextView text = (TextView) findViewById(R.id.treasure_title);
+			text.setText(mtext);
+			if (mmedia != null) {
+				ImageView iv = (ImageView) findViewById(R.id.treasure_media);
+				String url = this.getApplicationContext().getString(
+						R.string.baseUrl)
+						+ "public" + mmedia;
+
+				new DownloadImageTask(iv).execute(url);
+			}
+		}
+	}
+
+	class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
+		ImageView bmImage;
+
+		public DownloadImageTask(ImageView bmImage) {
+			this.bmImage = bmImage;
+		}
+
+		@Override
+		protected void onPreExecute() {
+			// TODO Auto-generated method stub
+			super.onPreExecute();
+		}
+
+		protected Bitmap doInBackground(String... urls) {
+			String urldisplay = urls[0];
+			Bitmap mIcon11 = null;
+			try {
+				InputStream in = new java.net.URL(urldisplay).openStream();
+				mIcon11 = BitmapFactory.decodeStream(in);
+			} catch (Exception e) {
+				Log.e("Error", e.getMessage());
+				e.printStackTrace();
+			}
+			return mIcon11;
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			super.onPostExecute(result);
+			bmImage.setImageBitmap(result);
 		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.treasure_box, menu);
 		return true;
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		
+		switch (item.getItemId()) {
+		case R.id.action_drop:
+			// New Intent to launch a Drop Treasure Activity
+			startActivity(new Intent(this, DropTreasureActivity.class));
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
 		}
 
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_treasure_box,
-					container, false);
-			return rootView;
-		}
+		return true;
 	}
 
 }

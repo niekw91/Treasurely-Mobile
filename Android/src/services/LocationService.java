@@ -14,8 +14,8 @@ public class LocationService implements LocationListener{
 
 	private LocationManager locationManager;
 	private String provider;
-	private int _latitude;
-	private int _longitude;
+	private double _latitude;
+	private double _longitude;
 	private Context _context;
 	
 	public LocationService(Context context) {
@@ -75,7 +75,7 @@ public class LocationService implements LocationListener{
 	 * Get latitude
 	 * @return
 	 */
-	public int getLatitude() {
+	public double getLatitude() {
 		
 		return _latitude;
 	}
@@ -84,7 +84,7 @@ public class LocationService implements LocationListener{
 	 * Get longitude
 	 * @return
 	 */
-	public int getLongitude() {
+	public double getLongitude() {
 		
 		return _longitude;
 	}
